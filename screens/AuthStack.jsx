@@ -10,29 +10,21 @@ const Stack = createNativeStackNavigator();
 // TODO: play around with rendering navigator or individual screens
 export default function AuthStack() {
   const { loading, loggedIn, theUser } = useAuthStatus();
-  console.log("loading", loading);
-  console.log("loggedIn", loggedIn);
+  const UnauthorizedStack = () => (
+    <Stack.Navigator>
+      <Stack.Screen name="Login" component={LoginScreen} />
+    </Stack.Navigator>
+  );
+
+  const AuthorizedStack = () => (
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} />
+    </Stack.Navigator>
+  );
 
   if (loading) {
     return null;
   }
 
-  return (
-    <Stack.Navigator>
-      {loggedIn && (
-        <Stack.Screen
-          name="Home"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-      )}
-      {!loggedIn && (
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-      )}
-    </Stack.Navigator>
-  );
+  return loggedIn ? <AuthorizedStack /> : <UnauthorizedStack />;
 }

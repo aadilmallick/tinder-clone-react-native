@@ -7,38 +7,23 @@ import {
   StatusBar,
 } from "react-native";
 import React from "react";
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  signInWithRedirect,
-} from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import useGoogleLogin from "../hooks/useGoogleLogin";
 
 export default function LoginScreen() {
-  const [loading, setLoading] = React.useState(false);
-  const googleLogin = async () => {
-    try {
-      setLoading(true);
-      const auth = getAuth();
-      const provider = new GoogleAuthProvider();
-      const { user } = await signInWithRedirect(auth, provider);
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const { loading, login } = useGoogleLogin();
 
   if (loading) {
-    return <ActivityIndicator />;
+    return <ActivityIndicator size={100} />;
   }
-
   return (
     <>
       <StatusBar />
       <View className="flex-1 bg-gray-200">
         <Text>LoginScreen</Text>
+        {/* TODO: implement login */}
         <TouchableOpacity
-          onPress={googleLogin}
+          onPress={login}
           className="bg-white px-8 py-2 rounded-lg"
         >
           <Text className="text-lg text-center">Sign in</Text>
