@@ -8,12 +8,15 @@ import {
 } from "firebase/auth";
 import { useState } from "react";
 import { auth } from "../utils/config";
+import * as WebBrowser from "expo-web-browser";
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function useGoogleLogin() {
   const [loading, setLoading] = useState(false);
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId:
-      "801544109335-boni58aqsli76ok6bnnog7dil11227q6.apps.googleusercontent.com",
+      "992700783860-a661ha58i5k4hglfsmic9bqhn61gmg9m.apps.googleusercontent.com",
     androidClientId:
       "992700783860-s0rkf5t42v7nminbjstnc1a4t4un3ok2.apps.googleusercontent.com",
   });

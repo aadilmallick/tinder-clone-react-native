@@ -21,7 +21,6 @@ export default function LoginScreen() {
       <StatusBar />
       <View className="flex-1 bg-gray-200">
         <Text>LoginScreen</Text>
-        {/* TODO: implement login */}
         <TouchableOpacity
           onPress={login}
           className="bg-white px-8 py-2 rounded-lg"
