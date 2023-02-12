@@ -30,7 +30,6 @@ export default function useGoogleLogin() {
           const credential = GoogleAuthProvider.credential(id_token);
           const res = await signInWithCredential(auth, credential);
           const { displayName, email, photoURL, uid } = res.user;
-          console.log("success", res.user);
         } catch (e) {
           console.error(e);
         } finally {

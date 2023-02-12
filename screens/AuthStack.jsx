@@ -11,13 +11,21 @@ const Stack = createNativeStackNavigator();
 export default function AuthStack() {
   const { loading, loggedIn, theUser } = useAuthStatus();
   const UnauthorizedStack = () => (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
       <Stack.Screen name="Login" component={LoginScreen} />
     </Stack.Navigator>
   );
 
   const AuthorizedStack = () => (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
       <Stack.Screen name="Home" component={HomeScreen} />
     </Stack.Navigator>
   );
