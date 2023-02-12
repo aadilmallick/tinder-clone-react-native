@@ -8,10 +8,10 @@ import {
   ImageBackground,
   Alert,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import useGoogleLogin from "../hooks/useGoogleLogin";
-import { useDispatch } from "react-redux";
+import { db } from "../utils/config";
 
 export default function LoginScreen() {
   const { loading, login } = useGoogleLogin();
@@ -19,6 +19,7 @@ export default function LoginScreen() {
   if (loading) {
     return <ActivityIndicator size={100} />;
   }
+
   return (
     <BackGround>
       {loading ? (

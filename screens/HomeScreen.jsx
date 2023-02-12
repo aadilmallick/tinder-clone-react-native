@@ -7,18 +7,35 @@ import {
   StatusBar,
   Alert,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { useSignOut } from "../hooks/useSignOut";
 import { useAuthStatus } from "../hooks/useAuthStatus";
 import HomeHeader from "../components/Home/HomeHeader";
 import { SwiperView } from "../components/Home/SwiperView";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { db } from "../utils/config";
+import { useNavigation } from "@react-navigation/native";
 export default function HomeScreen() {
-  // const { theUser, loggedIn, loading } = useAuthStatus();
+  const { theUser: user, loading } = useAuthStatus();
+  const navigation = useNavigation();
+  const [currentUser, setCurrentUser] = useState({});
+  useEffect(() => {
+    if (!user) return;
+    const docRef = doc(db, "users", user.uid);
 
-  // if (loading) {
-  //   return <ActivityIndicator size={100} />;
-  // }
+    return onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setCurrentUser({ ...docSnap.data(), id: docSnap.id });
+      } else {
+        navigation.navigate("Modal");
+      }
+    });
+  }, [user]);
+
+  if (loading) {
+    return <ActivityIndicator size={100} />;
+  }
 
   return (
     <>
