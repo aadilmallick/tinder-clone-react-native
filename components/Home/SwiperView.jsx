@@ -1,9 +1,11 @@
 import Swiper from "react-native-deck-swiper";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { shadow_styles } from "../../styles";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { dummyData } from "../../data/cardData";
 import { FontAwesome } from "@expo/vector-icons";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../utils/config";
 
 const overlayLabels = {
   left: {
@@ -28,12 +30,26 @@ const overlayLabels = {
 
 export function SwiperView() {
   const swiperRef = useRef(null);
+  const [profiles, setProfiles] = useState([]);
+
+  useEffect(() => {
+    async function fetchCards() {}
+
+    const colRef = collection(db, "users");
+    return onSnapshot(colRef, (snapshot) => {
+      if (!snapshot.empty) {
+        setProfiles(
+          snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        );
+      }
+    });
+  }, []);
 
   return (
     <View className="flex-1">
       <View className="flex-1 -mt-6">
         <Swiper
-          cards={dummyData}
+          cards={profiles}
           ref={swiperRef}
           containerStyle={{
             backgroundColor: "transparent",
@@ -46,7 +62,18 @@ export function SwiperView() {
           cardIndex={0}
           animateCardOpacity
           //* Have to manually refresh here, since resource intensive. Hot reload does not work.
-          renderCard={(card) => <Card card={card} key={card.id} />}
+          renderCard={(card) =>
+            card ? (
+              <Card card={card} key={card.id} />
+            ) : (
+              <View
+                className="h-3/4 rounded-3xl overflow-hidden"
+                style={{ ...shadow_styles.shadow_sm }}
+              >
+                <Text>No cards</Text>
+              </View>
+            )
+          }
         />
       </View>
       <SwiperButtons swiperRef={swiperRef} />
