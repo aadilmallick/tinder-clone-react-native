@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StatusBar,
   ImageBackground,
+  Alert,
 } from "react-native";
 import React from "react";
 import { getAuth } from "firebase/auth";
@@ -13,6 +14,8 @@ import useGoogleLogin from "../hooks/useGoogleLogin";
 
 export default function LoginScreen() {
   const { loading, login } = useGoogleLogin();
+
+  const onLogin = () => {};
 
   if (loading) {
     return <ActivityIndicator size={100} />;
