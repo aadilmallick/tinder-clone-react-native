@@ -4,6 +4,7 @@ import { useAuthStatus } from "../hooks/useAuthStatus";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./LoginScreen";
 import HomeScreen from "./HomeScreen";
+import ModalScreen from "./ModalScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,13 @@ export default function AuthStack() {
       }}
     >
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen
+        name="Modal"
+        component={ModalScreen}
+        options={{
+          presentation: "transparentModal",
+        }}
+      />
     </Stack.Navigator>
   );
 

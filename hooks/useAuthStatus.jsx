@@ -13,13 +13,14 @@ export const useAuthStatus = () => {
         setLoggedIn(true);
         setTheUser(user);
       } else {
-        setTheUser(null);
         setLoggedIn(false);
+        setTheUser(null);
       }
       setLoading(false);
     });
 
     // TODO: might have to add cleanup function.
+    return unsub;
   }, []);
 
   return { loggedIn, loading, theUser };
