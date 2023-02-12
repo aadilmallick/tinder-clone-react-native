@@ -14,11 +14,11 @@ import { useAuthStatus } from "../hooks/useAuthStatus";
 import HomeHeader from "../components/Home/HomeHeader";
 import { SwiperView } from "../components/Home/SwiperView";
 export default function HomeScreen() {
-  const { theUser, loggedIn, loading } = useAuthStatus();
+  // const { theUser, loggedIn, loading } = useAuthStatus();
 
-  if (loading) {
-    return <ActivityIndicator size={100} />;
-  }
+  // if (loading) {
+  //   return <ActivityIndicator size={100} />;
+  // }
 
   return (
     <>

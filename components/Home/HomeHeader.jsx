@@ -11,14 +11,18 @@ import { useAuthStatus } from "../../hooks/useAuthStatus";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useSignOut } from "../../hooks/useSignOut";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser, userLogout } from "../../features/user/userSlice";
 
 export default function HomeHeader() {
   const { theUser: user, loggedIn } = useAuthStatus();
   const { isLoading, logout } = useSignOut();
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-  if (!loggedIn) {
-    return null;
-  }
+
+  //   if (!user) {
+  //     return null;
+  //   }
 
   if (isLoading) {
     return <ActivityIndicator color="red" size={100} />;

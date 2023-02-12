@@ -9,11 +9,14 @@ import {
 import { useState } from "react";
 import { auth } from "../utils/config";
 import * as WebBrowser from "expo-web-browser";
+import { useDispatch } from "react-redux";
+import { userLogin } from "../features/user/userSlice";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function useGoogleLogin() {
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId:
       "992700783860-a661ha58i5k4hglfsmic9bqhn61gmg9m.apps.googleusercontent.com",
