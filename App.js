@@ -15,6 +15,7 @@ const queryClient = new QueryClient();
 export default function App() {
   return (
     <Provider store={store}>
+      <StatusBar style="dark" />
       <QueryClientProvider client={queryClient}>
         <NavigationContainer>
           <AuthStack />

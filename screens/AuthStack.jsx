@@ -6,6 +6,7 @@ import LoginScreen from "./LoginScreen";
 import HomeScreen from "./HomeScreen";
 import ModalScreen from "./ModalScreen";
 import MatchScreen from "./MatchScreen";
+import ChatScreen from "./ChatScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,7 +29,7 @@ export default function AuthStack() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Home" component={HomeScreen} />
+      {/* TODO: replace later, putting home screen first */}
       <Stack.Screen
         name="Match"
         component={MatchScreen}
@@ -36,6 +37,8 @@ export default function AuthStack() {
           presentation: "transparentModal",
         }}
       />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Chat" component={ChatScreen} />
       <Stack.Screen
         name="Modal"
         component={ModalScreen}
