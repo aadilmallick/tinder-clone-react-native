@@ -1,11 +1,31 @@
 import Swiper from "react-native-deck-swiper";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { shadow_styles } from "../../styles";
 import { useEffect, useRef, useState } from "react";
 import { dummyData } from "../../data/cardData";
 import { FontAwesome } from "@expo/vector-icons";
-import { collection, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../../utils/config";
+import { useAuthStatus } from "../../hooks/useAuthStatus";
+import Loading from "../ui/Loading";
+import { generateId } from "../../utils/generateId";
+import { useNavigation } from "@react-navigation/native";
 
 const overlayLabels = {
   left: {
@@ -30,20 +50,116 @@ const overlayLabels = {
 
 export function SwiperView() {
   const swiperRef = useRef(null);
-  const [profiles, setProfiles] = useState([]);
+  const [profiles, setProfiles] = useState(null);
+  const { theUser: user } = useAuthStatus();
+  const navigation = useNavigation();
 
   useEffect(() => {
-    async function fetchCards() {}
+    if (!user) return;
 
-    const colRef = collection(db, "users");
-    return onSnapshot(colRef, (snapshot) => {
-      if (!snapshot.empty) {
-        setProfiles(
-          snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-        );
-      }
-    });
-  }, []);
+    let unsub;
+    async function fetchCards() {
+      const colRef = collection(db, "users");
+      const passRef = collection(db, "users", user.uid, "passes");
+      const swipeRef = collection(db, "users", user.uid, "swipes");
+
+      const snapshotPass = await getDocs(passRef);
+      const snapshotSwipe = await getDocs(swipeRef);
+      const passedUserIdList = snapshotPass.docs.map((doc) => doc.id);
+      const swipedUserIdList = snapshotSwipe.docs.map((doc) => doc.id);
+      console.log("passed users", passedUserIdList);
+      console.log("swiped users", swipedUserIdList);
+
+      const hasPasses = Boolean(passedUserIdList.length != 0);
+      const hasSwipes = Boolean(swipedUserIdList.length != 0);
+
+      const theRef =
+        hasPasses || hasSwipes
+          ? query(
+              colRef,
+              where("id", "not-in", [
+                ...passedUserIdList,
+                ...swipedUserIdList,
+                "test",
+              ])
+            )
+          : colRef;
+
+      unsub = onSnapshot(theRef, (snapshot) => {
+        if (!snapshot.empty) {
+          console.log("here1");
+          const allProfiles = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          // filter in everbdy but ourselves.
+          setProfiles(allProfiles.filter((prof) => prof.id !== user.uid));
+        } else {
+          setProfiles([]);
+        }
+      });
+    }
+    fetchCards();
+    return () => {
+      unsub();
+    };
+  }, [user]);
+
+  const swipeLeft = async (cardIndex) => {
+    // TODO: implement passes
+    const match = profiles[cardIndex];
+    if (!match || !profiles) return;
+
+    const passRef = doc(db, "users", user.uid, "passes", match.id);
+    await setDoc(passRef, { ...match });
+
+    console.log("You swiped left");
+  };
+
+  const swipeRight = async (cardIndex) => {
+    const match = profiles[cardIndex];
+    if (!match || !profiles) return;
+
+    // create a document in the swipes collection which contains the user you swiped on.
+    const swipeRef = doc(db, "users", user.uid, "swipes", match.id);
+    // add user you swiped on to your swipes list
+    await setDoc(swipeRef, { ...match });
+
+    console.log("You swiped right");
+
+    const docSnap1 = await getDoc(doc(db, "users", user.uid));
+    const docSnap2 = await getDoc(doc(db, "users", match.id));
+    const loggedInUserProfile = { ...docSnap1.data(), id: docSnap1.id };
+    const swipedOnUserProfile = { ...docSnap2.data(), id: docSnap2.id };
+
+    const docSnap3 = await getDoc(
+      doc(db, "users", match.id, "swipes", user.id)
+    );
+    // if swiped on user also has you in their swipe list
+    if (docSnap3.exists()) {
+      console.log("Hooray, you matched with", swipedOnUserProfile);
+
+      // create a match document
+      const matchRef = doc(db, "matches", generateId(user.uid, match.id));
+      await setDoc(matchRef, {
+        users: {
+          [loggedInUserProfile.id]: { ...loggedInUserProfile },
+          [swipedOnUserProfile.id]: { ...swipedOnUserProfile },
+        },
+        matchedUsers: [loggedInUserProfile.id, swipedOnUserProfile.id],
+        timestamp: serverTimestamp(),
+      });
+
+      navigation.navigate("Match", {
+        loggedInUserProfile,
+        swipedOnUserProfile,
+      });
+    }
+  };
+
+  if (!user || !profiles) {
+    return <Loading />;
+  }
 
   return (
     <View className="flex-1">
@@ -56,8 +172,10 @@ export function SwiperView() {
           }}
           stackSize={5}
           verticalSwipe={false}
-          onSwipedLeft={() => {}}
-          onSwipedRight={() => {}}
+          onSwipedLeft={(cardIndex) => {
+            swipeLeft(cardIndex);
+          }}
+          onSwipedRight={swipeRight}
           overlayLabels={overlayLabels}
           cardIndex={0}
           animateCardOpacity
@@ -67,10 +185,13 @@ export function SwiperView() {
               <Card card={card} key={card.id} />
             ) : (
               <View
-                className="h-3/4 rounded-3xl overflow-hidden"
+                className="h-1/2 rounded-3xl overflow-hidden items-center justify-center bg-white"
                 style={{ ...shadow_styles.shadow_sm }}
+                key={Math.random()}
               >
-                <Text>No cards</Text>
+                <Text className="text-xl font-bold">
+                  Nobody is compatible with you 🤣🤣🤣
+                </Text>
               </View>
             )
           }

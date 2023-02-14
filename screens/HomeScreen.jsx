@@ -16,6 +16,7 @@ import { SwiperView } from "../components/Home/SwiperView";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../utils/config";
 import { useNavigation } from "@react-navigation/native";
+import Loading from "../components/ui/Loading";
 export default function HomeScreen() {
   const { theUser: user, loading } = useAuthStatus();
   const navigation = useNavigation();
@@ -32,10 +33,6 @@ export default function HomeScreen() {
       }
     });
   }, [user]);
-
-  if (loading) {
-    return <ActivityIndicator size={100} />;
-  }
 
   return (
     <>

@@ -13,20 +13,14 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useSignOut } from "../../hooks/useSignOut";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, userLogout } from "../../features/user/userSlice";
+import Loading from "../ui/Loading";
 
 export default function HomeHeader() {
   const { theUser: user, loggedIn } = useAuthStatus();
-  const { isLoading, logout } = useSignOut();
+  const { logout, isLoading } = useSignOut();
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  //   if (!user) {
-  //     return null;
-  //   }
-
-  if (isLoading) {
-    return <ActivityIndicator color="red" size={100} />;
-  }
   const onSignOut = () => {
     const idk = async () => {
       await logout();
@@ -49,6 +43,9 @@ export default function HomeHeader() {
     );
   };
 
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <View className="flex flex-row p-4 justify-between items-center border-b border-b-gray-300">
       <TouchableOpacity onPress={onSignOut}>

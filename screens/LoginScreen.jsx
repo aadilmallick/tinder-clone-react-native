@@ -12,12 +12,13 @@ import React, { useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import useGoogleLogin from "../hooks/useGoogleLogin";
 import { db } from "../utils/config";
+import Loading from "../components/ui/Loading";
 
 export default function LoginScreen() {
   const { loading, login } = useGoogleLogin();
 
   if (loading) {
-    return <ActivityIndicator size={100} />;
+    return <Loading />;
   }
 
   return (
