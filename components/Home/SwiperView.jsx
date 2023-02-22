@@ -72,6 +72,7 @@ export function SwiperView() {
 
       const hasPasses = Boolean(passedUserIdList.length != 0);
       const hasSwipes = Boolean(swipedUserIdList.length != 0);
+      console.log(hasPasses, hasSwipes);
 
       const theRef =
         hasPasses || hasSwipes
@@ -87,11 +88,11 @@ export function SwiperView() {
 
       unsub = onSnapshot(theRef, (snapshot) => {
         if (!snapshot.empty) {
-          console.log("here1");
           const allProfiles = snapshot.docs.map((doc) => ({
             ...doc.data(),
             id: doc.id,
           }));
+          // console.log("all profiles not swiped or passed on", allProfiles);
           // filter in everbdy but ourselves.
           setProfiles(allProfiles.filter((prof) => prof.id !== user.uid));
         } else {
@@ -118,6 +119,7 @@ export function SwiperView() {
 
   const swipeRight = async (cardIndex) => {
     const match = profiles[cardIndex];
+    console.log(match);
     if (!match || !profiles) return;
 
     // create a document in the swipes collection which contains the user you swiped on.
@@ -132,10 +134,11 @@ export function SwiperView() {
     const loggedInUserProfile = { ...docSnap1.data(), id: docSnap1.id };
     const swipedOnUserProfile = { ...docSnap2.data(), id: docSnap2.id };
 
+    // getting guy you swiped on already swiped on you
     const docSnap3 = await getDoc(
-      doc(db, "users", match.id, "swipes", user.id)
+      doc(db, "users", match.id, "swipes", user.uid)
     );
-    // if swiped on user also has you in their swipe list
+    // if that guy actually exists
     if (docSnap3.exists()) {
       console.log("Hooray, you matched with", swipedOnUserProfile);
 

@@ -19,7 +19,6 @@ export const useAuthStatus = () => {
       setLoading(false);
     });
 
-    // TODO: might have to add cleanup function.
     return unsub;
   }, []);
 

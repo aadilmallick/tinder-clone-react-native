@@ -41,5 +41,5 @@ module.exports = function (api) {
 3. Clear the cache and start your project
 
 ```bash
-expo r -c
+npx expo start --clear
 ```

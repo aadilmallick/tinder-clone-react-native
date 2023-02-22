@@ -1,23 +1,15 @@
-import { View, Text } from "react-native";
 import React from "react";
 import * as Google from "expo-auth-session/providers/google";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithCredential,
-} from "firebase/auth";
+import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { useState } from "react";
 import { auth } from "../utils/config";
 import * as WebBrowser from "expo-web-browser";
-import { useDispatch } from "react-redux";
-import { userLogin } from "../features/user/userSlice";
 import { CLIENT_ID, ANDROID_CLIENT_ID } from "@env";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function useGoogleLogin() {
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId: CLIENT_ID,
     androidClientId: ANDROID_CLIENT_ID,
