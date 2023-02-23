@@ -30,7 +30,7 @@ export default function AuthStack() {
       }}
     >
       {/* TODO: replace later, putting home screen first */}
-
+      <Stack.Screen name="Chat" component={ChatScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen
         name="Match"
@@ -39,7 +39,7 @@ export default function AuthStack() {
           presentation: "transparentModal",
         }}
       />
-      <Stack.Screen name="Chat" component={ChatScreen} />
+
       <Stack.Screen
         name="Modal"
         component={ModalScreen}
