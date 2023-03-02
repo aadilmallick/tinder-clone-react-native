@@ -1,6 +1,6 @@
 # Project quickstart
 
-1. Run quick installation of all necessary dependencies
+## Installation
 
 ```bash
 #react native navigation
@@ -23,7 +23,38 @@ npm i --save-dev tailwindcss
 npx tailwindcss init
 ```
 
-1. Setup up nativewind accordingly: [](https://www.nativewind.dev/quick-starts/expo)
+## Nativewind setup
+
+1. Add the files to allow tailwind styling for in the `tailwind.config.js`:
+
+```javascript
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./App.{js,jsx,ts,tsx}",
+    "./screens/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+2. Add nativewind plugin to `babel.config.js`:
+
+```javascript
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: ["nativewind/babel"],
+  };
+};
+```
+
+## React native dotenv setup
 
 2. Add the `["module:react-native-dotenv"]` to list of `plugins` in your `babel.config.js`.
 

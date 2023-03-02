@@ -46,6 +46,7 @@ export default function MessageScreen() {
       message,
     });
     setMessage("");
+    Keyboard.dismiss();
   };
 
   useEffect(() => {
@@ -59,7 +60,6 @@ export default function MessageScreen() {
         id: doc.id,
         ...doc.data(),
       }));
-      console.log(messages);
       setChatMessages(messages);
     });
     return unsub;
@@ -72,7 +72,7 @@ export default function MessageScreen() {
   return (
     <SafeAreaView className="flex-1 pb-4 bg-white">
       <ChatHeader title={matchedUser.name} />
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback onPress={() => {}}>
         <FlatList
           data={chatMessages}
           keyExtractor={(item) => item.id}
@@ -83,7 +83,7 @@ export default function MessageScreen() {
               return (
                 <ReceiverMessage
                   key={item.id}
-                  message={message}
+                  message={item.message}
                   userInfo={matchedUser}
                 />
               );
@@ -100,7 +100,7 @@ export default function MessageScreen() {
             onSubmitEditing={onSubmitMessage}
             className="text-lg flex-[.9] px-2"
           />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onSubmitMessage}>
             <FontAwesome name="send" color={"red"} size={24} />
           </TouchableOpacity>
         </View>
@@ -111,7 +111,7 @@ export default function MessageScreen() {
 
 function SenderMessage({ message }) {
   return (
-    <View className="bg-purple-500 rounded-lg px-5 py-3 mx-3 my-2 self-end rounded-tr-none">
+    <View className="bg-purple-500 rounded-lg px-5 py-3 mx-3 my-2 self-end rounded-tr-none max-w-[60%]">
       <Text className="text-white">{message}</Text>
     </View>
   );
@@ -119,10 +119,13 @@ function SenderMessage({ message }) {
 
 function ReceiverMessage({ message, userInfo }) {
   return (
-    <View className="bg-orange-500 rounded-lg px-5 py-3 mx-3 my-2 flex-row rounded-tr-none items-center">
+    <View
+      className="bg-orange-500 rounded-lg px-5 py-3 mx-3 my-2 flex-row rounded-tr-none items-center
+    relative self-start max-w-[60%]"
+    >
       <Image
         source={{ uri: userInfo.photoURL }}
-        className="h-12 w-12 rounded-full"
+        className="h-6 w-6 rounded-full absolute -bottom-2"
       />
       <Text className="text-white">{message}</Text>
     </View>

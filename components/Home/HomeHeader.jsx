@@ -60,7 +60,7 @@ export default function HomeHeader() {
           source={{ uri: "https://tinder.com/static/tinder.png" }}
         />
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
         <FontAwesome name="wechat" size={30} color="red" />
       </TouchableOpacity>
     </View>
