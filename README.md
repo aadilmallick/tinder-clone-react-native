@@ -1,4 +1,47 @@
-# Project quickstart
+# Project Overview
+
+This is a personal project that I created using React Native and Firebase. The app is designed to emulate Tinder, including the swiping, matching, and messaging functionality. The main flow of the app goes as follows:
+
+1. Login with Google
+2. Setup your profile
+3. Swipe or pass on people
+4. If you swipe on a person who has already swiped on you, you will get a match and be able to message that person.
+
+## Techonologies used
+
+- Firebase
+- Nativewind
+- React Native + Expo
+- React Native swiper
+- Expo Authsession
+
+## Project Demo
+
+If you want to test out this app of build up on it, follow these steps:
+
+1. Clone the repository
+2. Install all dependencies with `npm install`
+3. Modify your `app.json` so that it includes your own package name, your own credentials, etc. Make sure to fill in the `scheme`, `ios.bundleIdentifier`, and `android.package` with your own package name, like a `com.myname.myappname` sort of syntax.
+
+```json
+// app.json
+"scheme": "your_package_name",
+...
+"ios": {
+  ...
+  "bundleIdentifier": "your_package_name",
+  "buildNumber": "1.0.0"
+},
+"android": {
+  ...
+  "package": "your_package_name",
+  "versionCode": 1
+}
+```
+
+4. Create a Google Cloud project
+
+# How I did this project
 
 ## Installation
 

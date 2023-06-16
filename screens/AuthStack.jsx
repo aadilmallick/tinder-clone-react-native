@@ -8,6 +8,7 @@ import ModalScreen from "./ModalScreen";
 import MatchScreen from "./MatchScreen";
 import ChatScreen from "./ChatScreen";
 import MessageScreen from "./MessageScreen";
+import DummyScreen from "./DummyScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,8 @@ export default function AuthStack() {
       }}
     >
       {/* TODO: replace later, putting home screen first */}
+      <Stack.Screen name="Dummy" component={DummyScreen} />
+
       <Stack.Screen name="Home" component={HomeScreen} />
 
       <Stack.Screen

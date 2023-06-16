@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  useWindowDimensions,
 } from "react-native";
 import { shadow_styles } from "../../styles";
 import { useEffect, useRef, useState } from "react";
@@ -50,9 +51,33 @@ const overlayLabels = {
 
 export function SwiperView() {
   const swiperRef = useRef(null);
+  const { height: mobileHeight, width: mobileWidth } = useWindowDimensions();
   const [profiles, setProfiles] = useState(null);
   const { theUser: user } = useAuthStatus();
   const navigation = useNavigation();
+
+  const responsive = (w, h) => {
+    const responsiveWidth = (w / 375) * mobileWidth; // 375 is a base width used for scaling
+    const responsiveHeight = (h / 812) * mobileHeight; // 812 is a base height used for scaling
+
+    return {
+      width: responsiveWidth,
+      height: responsiveHeight,
+    };
+  };
+
+  const responsivePixel = (pixelValue) => {
+    const responsivePixelValue = (pixelValue / 375) * mobileWidth; // 375 is a base width used for scaling
+
+    return responsivePixelValue;
+  };
+
+  console.log("responsive pixel", responsivePixel(100));
+
+  useEffect(() => {
+    const colRef = collection(db, "users");
+    return onSnapshot(colRef, () => {});
+  }, []);
 
   useEffect(() => {
     if (!user) return;
